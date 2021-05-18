@@ -1,20 +1,35 @@
 <?php 
-IF(IsSet($_GET["Type"]) && IsSet($_GET["Data"]) && IsSet($_GET["Arguments"]))
+IF(IsSet($_GET["Type"]))
 {
-    $Core = New Core($_GET["Type"], $_GET["Data"], $_GET["Arguments"]);
+    $Type = $_GET["Type"];
 }
-ElseIF(IsSet($_GET["Data"]))
+else {
+    $Type = "Page";
+}
+IF(IsSet($_GET["Data"]))
 {
-    $Core = New Core("Page", $_GET["Data"]);
+    $Data = $_GET["Data"];
 }
+else {
+    $Data = "Index";
+}
+IF(IsSet($_GET["Arguments"]))
+{
+    $Arguments = $_GET["Arguments"];
+}
+else {
+    $Arguments = "";
+}
+$Core = New Core($Type, $Data, $Arguments);
 Class Core
 {
     Function __Construct($Type = "Page", $Data = "Index", $Arguments = "")
     {
+        
         try {
-            IF(File_Exists("Main/".$Type."/".$Data.".php"))
+            IF(File_Exists($Type."/".$Data.".php"))
             {
-                Require "Main/".$Type."/".$Data.".php";
+                Require $Type."/".$Data.".php";
                 $Pack = New DataPack($Arguments);
             }
         } catch (Exception $th) {
